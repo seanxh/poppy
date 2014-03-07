@@ -4,10 +4,10 @@ import os,sys,time,shutil,hashlib,datetime
 import threading
 import signal
 from GlobalVariable import GlobalVariable
-from Task import Task
 from CompareThread import CompareThread
 from StatsThread import StatsThread
 from Worker import Worker
+from Watcher import Watcher
 import config 
 def select_dir():
     #可以同步的文件夹列表
@@ -32,34 +32,49 @@ def select_dir():
     
     DIR = DIRS[dir_num-1][0]
     DIR2 = DIRS[dir_num-1][1]
+    
+    if os.sep == '\\':
+        DIR = DIR.replace('/','\\')
+        DIR2 = DIR2.replace('/','\\')
+    
     if len(DIRS[dir_num-1]) > 2:
-        Patterns = DIRS[dir_num-1][2]
+        StrictDIR =  DIRS[dir_num-1][2]
+        if  len(DIRS[dir_num-1]) == 4 :
+            Patterns = DIRS[dir_num-1][3]
+        else:
+            Patterns = []
     else:
         Patterns = []
+        StrictDIR = []
     
     if not os.path.isdir(DIR) or not os.path.isdir(DIR2):
         sys.exit()
-    return  DIR,DIR2,Patterns
+    return  DIR,DIR2,Patterns,StrictDIR
 
 def init_global_lock(*dirs):
     for dir in dirs:
         GlobalVariable.locks[dir] = threading.Lock()
+        GlobalVariable.dirs.append( dir )
 
 if  __name__ == '__main__':
     
-    (DIR,DIR2,Patterns) = select_dir()
-    print Patterns
+    (DIR,DIR2,Patterns,StrictDIR) = select_dir()
     init_global_lock(DIR,DIR2)
     
-    
     #开始遍历两个DIR，并把他们的文件列表维护到GlobalVariable.dir_tree中
-    st1  = StatsThread(DIR,Patterns)
-    st1.start()
-    st2 = StatsThread(DIR2,Patterns)
-    st2.start()
+    statThread = []
+    for dir in StrictDIR:
+        init_global_lock( DIR+dir+os.sep,DIR2+dir+os.sep )
+        st1 = StatsThread(DIR+dir+os.sep,Patterns)
+        st1.start()
+        statThread.append ( st1 )
+        st2 = StatsThread(DIR2+dir+os.sep,Patterns)
+        st2.start()
+        statThread.append ( st2 )
     
-    com1 = CompareThread(DIR)
-    com2 = CompareThread(DIR2)
+    for dir in StrictDIR:
+        CompareThread(DIR+dir+os.sep,DIR2+dir+os.sep)
+        CompareThread(DIR2+dir+os.sep,DIR+dir+os.sep)        
     
     if GlobalVariable.task_queue.qsize() > 0 :
         #print '####################################'
@@ -81,14 +96,32 @@ if  __name__ == '__main__':
     else:
         GlobalVariable.init = True
     
- 
-    com1.start()
-    com2.start()
+    for st in statThread:
+        st.stop()
     
-
+    for st in statThread:
+        st.join()
+    
+    GlobalVariable.locks = {}
+    GlobalVariable.dirs = []
+    init_global_lock(DIR,DIR2)
+    
     work=Worker()
+    print Patterns
+    print DIR
+    print DIR2
+    watcher1 = Watcher(DIR,Patterns)
+    watcher2 = Watcher(DIR2,Patterns)
+    
+    watcher1.start()
+    watcher2.start()
+    
+    GlobalVariable.init = True
+    
     work.start()
     
     print "All init job is done,Synchronizing"
     
-    st1.join()
+    watcher1.join()
+    watcher2.join()
+    work.join()
