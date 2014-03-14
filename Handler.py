@@ -17,7 +17,15 @@ class Handler(FileSystemEventHandler):
         #target_dir=target_dir
     
     def check_pattern(self,src_path):
+        if src_path.find('.svn') == 0:
+            return False
+    
         file = os.path.basename(src_path)
+        
+        pat = re.compile('^.*\.svn\-base$')
+        if pat.match( file ) != None:
+            return False
+            
         if (len(self.patterns) > 0) :
             for pattern in self.patterns:
                 pat = re.compile('^'+str(pattern)+'$')
@@ -28,8 +36,6 @@ class Handler(FileSystemEventHandler):
     
     def push_file_process_queue(self,src_path,type):
         if self.check_pattern(src_path):
-            if ( src_path.find('.svn') == 0 ):
-                return 
             for target_dir in GlobalVariable.dirs:
                 if not self.dir == target_dir:
                     
