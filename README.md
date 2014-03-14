@@ -5,6 +5,18 @@ Poppy可以同步两个本地文件夹中的内容。
 
 使用
 
+依赖关系：
+
+poppy的文件消息机制依赖于watchdog 扩展。使用前需要先安装watchdog
+WatchDog主页：http://pythonhosted.org//watchdog
+安装：
+http://pythonhosted.org//watchdog/installation.html#installation
+示例：
+$ wget -c http://pypi.python.org/packages/source/w/watchdog/watchdog-0.7.1.tar.gz
+$ tar zxvf watchdog-0.7.1.tar.gz
+$ cd watchdog-0.7.1
+$ python setup.py install
+
 配置：
 
 编辑 config.py
@@ -29,6 +41,21 @@ python main.py
 poppy can synchronize two local dir's content.
 
 How to Use
+
+Depend on
+
+poppy use the watchDog to receive the OS's file changed notify, which should be installed before you use poppy.
+
+WatchDog HomePage :http://pythonhosted.org//watchdog
+
+Install:
+http://pythonhosted.org//watchdog/installation.html#installation
+
+EG:
+$ wget -c http://pypi.python.org/packages/source/w/watchdog/watchdog-0.7.1.tar.gz
+$ tar zxvf watchdog-0.7.1.tar.gz
+$ cd watchdog-0.7.1
+$ python setup.py install
 
 Config
 
