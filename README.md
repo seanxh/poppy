@@ -8,9 +8,12 @@ Poppy可以同步两个本地文件夹中的内容。
 依赖关系：
 
 poppy的文件消息机制依赖于watchdog 扩展。使用前需要先安装watchdog
+
 WatchDog主页：http://pythonhosted.org//watchdog
+
 安装：
 http://pythonhosted.org//watchdog/installation.html#installation
+
 示例：
 $ wget -c http://pypi.python.org/packages/source/w/watchdog/watchdog-0.7.1.tar.gz
 $ tar zxvf watchdog-0.7.1.tar.gz
