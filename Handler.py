@@ -28,6 +28,8 @@ class Handler(FileSystemEventHandler):
     
     def push_file_process_queue(self,src_path,type):
         if self.check_pattern(src_path):
+            if ( src_path.find('.svn') == 0 ):
+                return 
             for target_dir in GlobalVariable.dirs:
                 if not self.dir == target_dir:
                     
@@ -65,7 +67,7 @@ class Handler(FileSystemEventHandler):
     def on_moved(self,event):
         # pass
         # print "move",event.src_path,event.dest_path
-        if event.dest_path.index(self.dir) != 0:
+        if event.dest_path.find(self.dir) != 0:
             self.push_file_process_queue(event.src_path[len(self.dir):],"delete")
         else :
             
