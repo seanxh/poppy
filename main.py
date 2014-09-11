@@ -8,6 +8,7 @@ from CompareThread import CompareThread
 from StatsThread import StatsThread
 from Worker import Worker
 from Watcher import Watcher
+from KillKeyboard  import KillKeyboard
 import config 
 def select_dir():
     #可以同步的文件夹列表
@@ -139,6 +140,8 @@ if  __name__ == '__main__':
     print Patterns
     print DIR
     print DIR2
+    
+    KillKeyboard()
     watcher1 = Watcher(DIR,Patterns,DIR_config[1])
     watcher2 = Watcher(DIR2,Patterns,DIR2_config[1])
     
