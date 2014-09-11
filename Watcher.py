@@ -10,15 +10,19 @@ from Handler import Handler
 import time
 
 class Watcher(threading.Thread):
-    def __init__(self,dir,patterns):
+    def __init__(self,dir,patterns,watch=True):
         threading.Thread.__init__(self)
         self.dir = dir
-        self.daemon = True #Èç¹ûÉèÖÃ´Ë²ÎÊı£¬ÔòÎªºóÌ¨Ïß³Ì
+        self.daemon = True #å¦‚æœè®¾ç½®æ­¤å‚æ•°ï¼Œåˆ™ä¸ºåå°çº¿ç¨‹
         self.patterns = patterns
+        self.watch = watch
         
-        self.flag = True #ÊÇ·ñĞèÒªÔËĞĞµÄ±êÊ¶Î»
+        self.flag = True #æ˜¯å¦éœ€è¦è¿è¡Œçš„æ ‡è¯†ä½
          
     def run(self):
+        
+        if not self.watch:
+            return
         
         event_handler = Handler(self.dir,self.patterns)
         observer = Observer()

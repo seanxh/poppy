@@ -18,8 +18,19 @@ def select_dir():
         if len(DIRS[i]) < 2:
             print "DIRS["+str(i)+"] doesnt has 2 elements"
             sys.exit()
-        print str(i+1)+":"+" "*(2-(i+1)//10)+"from "+DIRS[i][0]
-        print "    to   "+DIRS[i][1]
+        
+        if type(DIRS[i][0]) is list:
+            source_dir =  DIRS[i][0][0]
+        else:
+            source_dir =  DIRS[i][0]
+        
+        if type(DIRS[i][1]) is list:
+            target_dir =  DIRS[i][1][0]
+        else:
+            target_dir =  DIRS[i][1]
+        
+        print str(i+1)+":"+" "*(2-(i+1)//10)+"from "+source_dir
+        print "    to   "+target_dir
 
     try:
         dir_num = int(raw_input("ENTER THE NUM OF DIR'S (0 exit):\n"))
@@ -32,10 +43,23 @@ def select_dir():
     
     DIR = DIRS[dir_num-1][0]
     DIR2 = DIRS[dir_num-1][1]
+
+    if type(DIR) is str:
+        DIR = [DIR,1]
+
+    if type(DIR2) is str:
+        DIR2 = [DIR2,1]
+        
+    if not type(DIR) is list:
+        print 'DIR Config errr'
+     
+    if not type(DIR2) is list:
+        print 'DIR2 Config errr'
+
     
     if os.sep == '\\':
-        DIR = DIR.replace('/','\\')
-        DIR2 = DIR2.replace('/','\\')
+        DIR[0] = DIR[0].replace('/','\\')
+        DIR2[0] = DIR2[0].replace('/','\\')
     
     if len(DIRS[dir_num-1]) > 2:
         StrictDIR =  DIRS[dir_num-1][2]
@@ -47,8 +71,9 @@ def select_dir():
         Patterns = []
         StrictDIR = []
     
-    if not os.path.isdir(DIR) or not os.path.isdir(DIR2):
+    if not os.path.isdir(DIR[0]) or not os.path.isdir(DIR2[0]):
         sys.exit()
+
     return  DIR,DIR2,Patterns,StrictDIR
 
 def init_global_lock(*dirs):
@@ -58,7 +83,11 @@ def init_global_lock(*dirs):
 
 if  __name__ == '__main__':
     
-    (DIR,DIR2,Patterns,StrictDIR) = select_dir()
+    (DIR_config,DIR2_config,Patterns,StrictDIR) = select_dir()
+    
+    DIR = DIR_config[0]
+    DIR2 = DIR2_config[0]
+    
     init_global_lock(DIR,DIR2)
     
     #开始遍历两个DIR，并把他们的文件列表维护到GlobalVariable.dir_tree中
@@ -110,8 +139,8 @@ if  __name__ == '__main__':
     print Patterns
     print DIR
     print DIR2
-    watcher1 = Watcher(DIR,Patterns)
-    watcher2 = Watcher(DIR2,Patterns)
+    watcher1 = Watcher(DIR,Patterns,DIR_config[1])
+    watcher2 = Watcher(DIR2,Patterns,DIR2_config[1])
     
     watcher1.start()
     watcher2.start()

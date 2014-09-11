@@ -58,7 +58,7 @@ class Task(object):
     def modify(self):
         #如果source文件已经删除，就不要执行复制了
         #如果修改的文件已经不存在，不要执行修改了
-        if not os.path.isfile( self.source_file ) or not os.path.isfile( self.target_file ):
+        if not os.path.isfile( self.source_file ):
             return True
         if not GlobalVariable.init:
             return False

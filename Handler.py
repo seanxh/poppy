@@ -22,7 +22,7 @@ class Handler(FileSystemEventHandler):
     
         file = os.path.basename(src_path)
         
-        pat = re.compile('^.*\.svn\-base$')
+        pat = re.compile('^.*\.svn.*$')
         if pat.match( file ) != None:
             return False
             
@@ -38,14 +38,14 @@ class Handler(FileSystemEventHandler):
         if self.check_pattern(src_path):
             for target_dir in GlobalVariable.dirs:
                 if not self.dir == target_dir:
-                    
-                    if type == 'add' and ( os.path.isdir( target_dir+src_path) or os.path.isfile(target_dir+src_path) ):
-                        continue
+                    #if type == 'add' and ( os.path.isdir( target_dir+src_path) or os.path.isfile(target_dir+src_path) ):
+                    #    continue
                     if type == 'delete' and not os.path.isdir( target_dir+src_path) and not os.path.isfile(target_dir+src_path):
                         continue
                      
                     if type == 'modify' and ( md5(self.dir+src_path) == md5(target_dir+src_path) ):
                         continue
+                    
                     GlobalVariable.task_queue.put( Task(self.dir+src_path,target_dir+src_path,type) )
 
     
