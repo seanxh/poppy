@@ -17,10 +17,10 @@ class Task(object):
     def __str__(self):
         target_file = self.target_file;source_file=self.source_file;
         
-        if len(self.target_file) > 50:
+        if len(self.target_file) > 100:
             target_file = ''.join((self.target_file[0:15],'...',self.target_file[len(self.target_file)-30:]))
             
-        if len(self.source_file) > 50:
+        if len(self.source_file) > 100:
             source_file = ''.join((self.source_file[0:15],'...',self.source_file[len(self.source_file)-30:]))
         return str(self.action)+":" + " "*(7-len(self.action)) + "from " + str(source_file) + "\n"+" "*8+"To   " + str(target_file)
         

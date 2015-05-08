@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 import threading
 from GlobalVariable import GlobalVariable
+import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from watchdog.events import LoggingEventHandler
 from Task import Task
 from util import *
 from Handler import Handler
@@ -23,7 +25,12 @@ class Watcher(threading.Thread):
         
         if not self.watch:
             return
-        
+
+        logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+
+        # event_handler = LoggingEventHandler()
         event_handler = Handler(self.dir,self.patterns)
         observer = Observer()
         observer.schedule(event_handler, path=self.dir, recursive=True)

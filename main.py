@@ -8,6 +8,10 @@ from CompareThread import CompareThread
 from StatsThread import StatsThread
 from Worker import Worker
 from Watcher import Watcher
+import logging
+from watchdog.events import LoggingEventHandler
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 from KillKeyboard  import KillKeyboard
 import config 
 def select_dir():
@@ -83,7 +87,7 @@ def init_global_lock(*dirs):
         GlobalVariable.dirs.append( dir )
 
 if  __name__ == '__main__':
-    
+
     (DIR_config,DIR2_config,Patterns,StrictDIR) = select_dir()
     
     DIR = DIR_config[0]
@@ -140,8 +144,12 @@ if  __name__ == '__main__':
     print Patterns
     print DIR
     print DIR2
-    
+
     KillKeyboard()
+
+
+
+
     watcher1 = Watcher(DIR,Patterns,DIR_config[1])
     watcher2 = Watcher(DIR2,Patterns,DIR2_config[1])
     
@@ -149,9 +157,9 @@ if  __name__ == '__main__':
     watcher2.start()
     
     GlobalVariable.init = True
-    
+
     work.start()
-    
+
     print "All init job is done,Synchronizing"
     
     watcher1.join()

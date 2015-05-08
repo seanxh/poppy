@@ -1,12 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-##ÒªÍ¬²½µÄÎÄ¼ş¼Ğ~
-##Ã¿¸öITEM°üº¬ÒªÍ¬²½µÄÁ½¸öÎÄ¼ş¼ĞµÄÃû×Ö
-##µÚÈıÏîÎªstrictµÄdirÃû³Æ£¬Èç¹û²»Îª¿ÕÔÚ³õÊ¼»¯Ê±±ØĞëÒªÇóÁ½¸ö×ÓÎÄ¼ş¼ĞÍêÈ«ÏàÍ¬
-##µÚËÄÏîÎªÎÄ¼şÃûÆ¥Åä±í´ïÊ½
+##è¦åŒæ­¥çš„æ–‡ä»¶å¤¹~
+##æ¯ä¸ªITEMåŒ…å«è¦åŒæ­¥çš„ä¸¤ä¸ªæ–‡ä»¶å¤¹çš„åå­—
+##ç¬¬ä¸‰é¡¹ä¸ºstrictçš„diråç§°ï¼Œå¦‚æœä¸ä¸ºç©ºåœ¨åˆå§‹åŒ–æ—¶å¿…é¡»è¦æ±‚ä¸¤ä¸ªå­æ–‡ä»¶å¤¹å®Œå…¨ç›¸åŒ
+##ç¬¬å››é¡¹ä¸ºæ–‡ä»¶ååŒ¹é…è¡¨è¾¾å¼
+
 DIRS = (
-    [r"D:/openplatform/protected/",r"Z:/yii/protected/",["strict_dir"],['.*\.html']],
-    [r"D:/yii/protected/",r"Z:/yii/protected/",[],['.*\.html']],
-    [r"D:/yii/protected/modules/",r"Z:/yii/protected/modules/",[],['.*\.html']],
+        [[r"/Users/sean/Rms/atm-275-1_BRANCH/",1],[r"/Volumes/darwin/rms/atm-275-1_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-275-5_BRANCH/",1],[r"/Volumes/darwin/rms/atm-275-5_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-275-2_BRANCH/",1],[r"/Volumes/darwin/rms/atm-275-2_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-289_BRANCH/",1],[r"/Volumes/darwin/rms/atm-289_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-289_BRANCH/",1],[r"/Volumes/darwin-1/atm-289_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-299_BRANCH/",1],[r"/Volumes/darwin/rms/atm-299_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-298_BRANCH/",1],[r"/Volumes/darwin/rms/atm-298_BRANCH/",0],[]],
+	    [[r"/Users/sean/Rms/atm-301_BRANCH/",1],[r"/Volumes/darwin/rms/atm-301_BRANCH/",0],[]],
+	    [[r"/Users/sean/Rms/atm-287-1_BRANCH/",1],[r"/Volumes/darwin/rms/atm-287-1_BRANCH/",0],[]],
+	    [[r"/Users/sean/Rms/atm-305_BRANCH/",1],[r"/Volumes/darwin/rms/atm-305_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-304_BRANCH/",1],[r"/Volumes/darwin/rms/atm-304_BRANCH/",0],[]],
+        [[r"/Users/sean/Rms/atm-304-1_BRANCH/",1],[r"/Volumes/darwin/rms/atm-304-1_BRANCH/",0],[]],
+        [[r"/Users/sean/Code/hadoop/",1],[r"/Volumes/darwin/hadoop/",0],[]],
+        [[r"/Users/sean/Code2/hadoop2/",1],[r"/Volumes/darwin/hadoop2/",0],[]],
+        [[r"/Users/sean/Code/pyserver/",1],[r"/Volumes/darwin/pyserver/",0],[]],
+        [[r"/Users/sean/Code2/pyserver2/",1],[r"/Volumes/darwin/pyserver2/",0],[]],
+        [[r"/Users/sean/Code/rpc_server/rpc_server/",1],[r"/Volumes/darwin/rpc_server/",0],[]],
+        [[r"/Users/sean/code2/rpc_server/",1],[r"/Volumes/darwin/idw/rpc_server/",0],[]],
+        [[r"/Users/sean/code2/pyspark_queue/",1],[r"/Volumes/darwin/pyspark_queue/",0],[]],
+        [[r"/Users/sean/code2/idw1.0/",1],[r"/Volumes/darwin/",0],[]],
 )

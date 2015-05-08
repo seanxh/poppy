@@ -12,7 +12,7 @@ class CompareThread():
     def __init__(self,dir,target_dir):
         self.dir = dir
         self.target_dir = target_dir
-        self.daemon = True #Èç¹ûÉèÖÃ´Ë²ÎÊý£¬ÔòÎªºóÌ¨Ïß³Ì
+        self.daemon = True #å¦‚æžœè®¾ç½®æ­¤å‚æ•°ï¼Œåˆ™ä¸ºåŽå°çº¿ç¨‹
             
         self.new_my_dir = GlobalVariable.dir_tree[self.dir]
         GlobalVariable.locks[self.dir].acquire()
@@ -22,18 +22,18 @@ class CompareThread():
 
             
     '''
-    ³õÊ¼»¯Á½¸öÎÄ¼þ¼Ð£¬±È½ÏÊÇ·ñÒ»ÖÂ
+    åˆå§‹åŒ–ä¸¤ä¸ªæ–‡ä»¶å¤¹ï¼Œæ¯”è¾ƒæ˜¯å¦ä¸€è‡´
     '''
     def init_compare(self,new_my_dir,target_dir):
         target_dir_tree = GlobalVariable.dir_tree[target_dir]
-        #°Ñ×Ô¼ººÍÆäËüdir½øÐÐ±È½Ï
+        #æŠŠè‡ªå·±å’Œå…¶å®ƒdirè¿›è¡Œæ¯”è¾ƒ
         for file in new_my_dir:
-                #Ä¿±êÎÄ¼þ¼ÐÀïÃ»ÓÐ´ËÎÄ¼þ£¬ÐÂÔö
+                #ç›®æ ‡æ–‡ä»¶å¤¹é‡Œæ²¡æœ‰æ­¤æ–‡ä»¶ï¼Œæ–°å¢ž
                 if not target_dir_tree.has_key(file):
                     GlobalVariable.task_queue.put( Task(self.dir+file,target_dir+file,"add") )
                     continue
                 
-                #È·Êµ±»¸üÐÂ¹ý£¬²¢ÇÒmd5²»ÏàÍ¬µÄ
+                #ç¡®å®žè¢«æ›´æ–°è¿‡ï¼Œå¹¶ä¸”md5ä¸ç›¸åŒçš„
                 if new_my_dir[ file ]['mtime'] > target_dir_tree[file]['mtime']:
                     if md5(self.dir+file) != md5(target_dir+file):
                         GlobalVariable.task_queue.put( Task(self.dir+file,target_dir+file,"modify") )

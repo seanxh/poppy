@@ -4,19 +4,19 @@ import Queue
 import threading
 
 class GlobalVariable(object):
-    #ÎÄ¼ş×´Ì¬Ğ´ÈëËø
+    #æ–‡ä»¶çŠ¶æ€å†™å…¥é”
     locks = {}
-    #ÎÄ¼ş×´Ì¬Ó³Éä±í
+    #æ–‡ä»¶çŠ¶æ€æ˜ å°„è¡¨
     dir_tree = {}
     dirs = []
-    #ÈÎÎñ¶ÓÁĞ
+    #ä»»åŠ¡é˜Ÿåˆ—
     task_queue = Queue.Queue()
-    #³õÊ¼»¯¶ÓÁĞ´æ´¢
+    #åˆå§‹åŒ–é˜Ÿåˆ—å­˜å‚¨
     tmp_init_task_queue =  Queue.Queue()
     queue_lock = threading.Lock()
-    #ÒÆ¶¯µÄÎÄ¼ş»á²úÉúmovedºÍmodifyÁ½¸öÊÂ¼ş,moveÊ±½«dest_path¼ÇÂ¼µ½dictÖĞ£¬ÔÚmodifyÖĞÆÁ±Î´ËÎÄ¼ş
+    #ç§»åŠ¨çš„æ–‡ä»¶ä¼šäº§ç”Ÿmovedå’Œmodifyä¸¤ä¸ªäº‹ä»¶,moveæ—¶å°†dest_pathè®°å½•åˆ°dictä¸­ï¼Œåœ¨modifyä¸­å±è”½æ­¤æ–‡ä»¶
     moved_dict = {}
-    #init flag£¬³õÊ¼»¯³É¹¦Óë·ñ
+    #init flagï¼Œåˆå§‹åŒ–æˆåŠŸä¸å¦
     init = False
     
     def __init__(self):

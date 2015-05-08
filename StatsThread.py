@@ -10,9 +10,9 @@ import time
 class StatsThread(threading.Thread):
     def __init__(self,dir,patterns=[]):
         threading.Thread.__init__(self)
-        self.daemon = True #Èç¹ûÉèÖÃ´Ë²ÎÊı£¬ÔòÎªºóÌ¨Ïß³Ì
-        self.dir = dir #Î¬»¤µÄDIR
-        self.flag = True #ÊÇ·ñĞèÒªÔËĞĞµÄ±êÊ¶Î»
+        self.daemon = True #å¦‚æœè®¾ç½®æ­¤å‚æ•°ï¼Œåˆ™ä¸ºåå°çº¿ç¨‹
+        self.dir = dir #ç»´æŠ¤çš„DIR
+        self.flag = True #æ˜¯å¦éœ€è¦è¿è¡Œçš„æ ‡è¯†ä½
         self.patterns = patterns
         self.obj_file = Files()
         GlobalVariable.dir_tree[self.dir] = self.obj_file.tree(self.dir,patterns)
@@ -38,4 +38,3 @@ class StatsThread(threading.Thread):
             
             #for f in GlobalVariable.dir_tree[self.dir]: 
             #    print  str(f)+":"+str(GlobalVariable.dir_tree[self.dir][f])
-            
