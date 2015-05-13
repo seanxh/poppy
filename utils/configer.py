@@ -10,7 +10,7 @@ def parse_ini_2_dict(file):
     list_option = ['include','exclude','strict']
 
     config = ConfigParser.ConfigParser()
-    with open(file,"rw") as cfgfile:
+    with open(file,"r") as cfgfile:
         config.readfp(cfgfile)
         for k in config.sections():
             dict_conf = {'number':k}
