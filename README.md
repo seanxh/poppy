@@ -1,4 +1,4 @@
-poppy
+Poppy
 =====
 
 Poppy是一个简单的用于同步两个本地文件夹中文件的工具。
@@ -34,6 +34,7 @@ Linux/Mac OSX 用户可直接招待poppy脚本以启动。
 ## 反馈
 seanxuhao@gmail.com
 
+Poppy
 ====================
 
 Poppy is a simple and reliable tool for synchronizing two directories contents. 
