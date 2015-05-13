@@ -1,81 +1,74 @@
 poppy
 =====
 
-Poppy可以同步两个本地文件夹中的内容。
+Poppy是一个简单的用于同步两个本地文件夹中文件的工具。
 
-使用
+操作系统：
+poppy是用python语言编写,GUI界面使用Tkinter完成。原则上来说兼容Win/Linux/Mac。针对Win&Mac下的兼容性进行了常规测试，欢迎Linux用户反馈。
 
 依赖关系：
 
-poppy的文件消息机制依赖于watchdog 扩展。使用前需要先安装watchdog
+poppy的文件变更消息机制依赖于py-watchdog。使用前需要先安装watchdog
 
 WatchDog主页：http://pythonhosted.org//watchdog
 
-安装：
+安装参考：
 http://pythonhosted.org//watchdog/installation.html#installation
 
-示例：
+Linux/Mac OSX 安装示例：
+
 $ wget -c http://pypi.python.org/packages/source/w/watchdog/watchdog-0.7.1.tar.gz
+
 $ tar zxvf watchdog-0.7.1.tar.gz
+
 $ cd watchdog-0.7.1
+
 $ python setup.py install
 
 配置：
 
-编辑 config.py
-
-在DIRS中增加你想要同步的文件夹。
-
-格式如下：
-[r"DIR1",r"DIR2",[strict dirs][patterns]]
-
-例如：
-[r"D:/poppy/",r"Z:/poppy/",["child_dir1","child/child_dir"],['.*\.php','.*\.py']]
-
-关于强制文件夹：
-
-当你定义了一个非空的Strict Dirs列表时，程序初始化时就会检查两个文件夹的不同。如果确实有不同，你必须按yes同步。
+Poppy的配置信息在config/config.ini文件中，一般除非您使用命令行界面或备份配置信息，不需要手动修改此配置文件。
 
 启动：
-python main.py
+Windows请直接执行poppy.bat脚本启动Poppy程序界面。
+Linux/Mac OSX 用户可直接招待poppy脚本以启动。
+
+反馈：seanxuhao@gmail.com
 
 ====================
 
-poppy can synchronize two local dir's content.
+Poppy is a simple and reliable tool for synchronizing two directories contents. 
 
-How to Use
+Operate System:
+poppy is written by python, and GUI is written by py-Tkiner.In principle it can compat with Windows/Linux/Mac.
+I tested for Windows and Mac OSX, and welcome the Linux's test.
 
 Depend on
 
-poppy use the watchDog to receive the OS's file changed notify, which should be installed before you use poppy.
+poppy uses the py-watchDog to receive the OS's file changed notify, which should be installed before you use poppy.
 
 WatchDog HomePage :http://pythonhosted.org//watchdog
 
-Install:
+Install reference:
 http://pythonhosted.org//watchdog/installation.html#installation
 
-EG:
+Linux/MacOS install demo:
 $ wget -c http://pypi.python.org/packages/source/w/watchdog/watchdog-0.7.1.tar.gz
+
 $ tar zxvf watchdog-0.7.1.tar.gz
+
 $ cd watchdog-0.7.1
+
 $ python setup.py install
 
-Config
+Configure:
 
-Edit config.py
+poppy's config file is written in config/config.ini. Unless you use the command model or you want to back up the config, otherwise you will not care this file.
 
-add the dir to variable DIR which you want to synchronized.
+Start:
 
-Format:
-[r"DIR1",r"DIR2",[strict dirs][patterns]]
+Windows user can execute the poppy.bat for running the GUI of Poppy Application.
 
-Eg:
-[r"D:/poppy/",r"Z:/poppy/",["child_dir1","child/child_dir"],['.*\.php','.*\.py']]
+Mac OSX/Linux user can execute poppy shell script to running it.
 
-About Strict Dirs:
-If you defined the third parameter and not a empty list.
-
-When the program start, it will check the difference between the two child dir. When it is True,you will have to enter "yes" to synchronize the strict DIRs.
-
-Start
-python main.py
+feedback:[seanxuhao@gmail.com](seanxuhao@gmail.com)
