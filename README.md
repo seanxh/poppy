@@ -44,12 +44,12 @@ poppy is written by python, and GUI is written by py-Tkiner.In principle it can 
 I tested for Windows and Mac OSX, and welcome the Linux's test.
 
 
-## Depend on:
+## Depend on
 poppy uses the py-watchDog to receive the OS's file changed notify, which should be installed before you use poppy.
 
 WatchDog HomePage :http://pythonhosted.org//watchdog
 
-## Install reference:
+## Install reference
 http://pythonhosted.org//watchdog/installation.html#installation
 
 ### Linux/MacOS install demo:
@@ -64,11 +64,11 @@ $ python setup.py install
 
 poppy's config file is written in config/config.ini. Unless you use the command model or you want to back up the config, otherwise you will not care this file.
 
-## Start:
+## Start
 
 Windows user can execute the poppy.bat for running the GUI of Poppy Application.
 
 Mac OSX/Linux user can execute poppy shell script to running it.
 
-## feedback
+## Feedback
 [seanxuhao@gmail.com](seanxuhao@gmail.com)
