@@ -2,84 +2,65 @@
 # -*- coding: utf-8 -*-
 import os,sys,time,shutil,hashlib,datetime
 import threading
-import signal
-from GlobalVariable import GlobalVariable
-from CompareThread import CompareThread
-from StatsThread import StatsThread
-from Worker import Worker
-from Watcher import Watcher
+from utils import *
+from watcher import *
+from task import *
 import logging
-from watchdog.events import LoggingEventHandler
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from KillKeyboard  import KillKeyboard
-import config 
+import config
+
 def select_dir():
     #可以同步的文件夹列表
-    DIRS = config.DIRS
-    
+    # DIRS = config.DIRS
+    DIRS = parse_ini_2_dict( os.path.dirname( os.path.abspath(__file__) ) + '/config/config.ini' )
+
     print "YOU CAN CHOOSE FROM THE NEXT LIST:"
-    for i in range(0,len(DIRS)):
-        if len(DIRS[i]) < 2:
-            print "DIRS["+str(i)+"] doesnt has 2 elements"
-            sys.exit()
-        
-        if type(DIRS[i][0]) is list:
-            source_dir =  DIRS[i][0][0]
-        else:
-            source_dir =  DIRS[i][0]
-        
-        if type(DIRS[i][1]) is list:
-            target_dir =  DIRS[i][1][0]
-        else:
-            target_dir =  DIRS[i][1]
-        
-        print str(i+1)+":"+" "*(2-(i+1)//10)+"from "+source_dir
+    for (i,conf) in DIRS.iteritems():
+
+        DIRS[i]['source'] = source_dir = conf['source'] if conf.has_key('source') else ''
+        DIRS[i]['target'] = target_dir = conf['target'] if conf.has_key('target') else ''
+        DIRS[i]['strict'] = strict_dir = conf['strict'] if conf.has_key('strict') and type(conf['strict']) is list else []
+        DIRS[i]['exclude'] = exclude = conf['exclude'] if conf.has_key('exclude') and type(conf['exclude']) is list else []
+        DIRS[i]['include'] = include = conf['include'] if conf.has_key('include') and type(conf['include']) is list else []
+
+
+        if len(source_dir) <= 0:
+            continue
+        if len(target_dir) <= 0 :
+            continue
+
+        print i+":"+" "*(2-(len(i)+1)//10)+"from "+source_dir
         print "    to   "+target_dir
 
     try:
-        dir_num = int(raw_input("ENTER THE NUM OF DIR'S (0 exit):\n"))
+        dir_num = raw_input("ENTER THE NUM OF DIR'S (0 exit):\n")
     except Exception,e:
         print "you should enter a number,I can't convert that you input into a number,Thank you"
         sys.exit()
-    if dir_num==0 or dir_num > len(DIRS):
+
+    if not DIRS.has_key(dir_num):
         print "the index outrage dir's index"
         sys.exit()
-    
-    DIR = DIRS[dir_num-1][0]
-    DIR2 = DIRS[dir_num-1][1]
 
-    if type(DIR) is str:
-        DIR = [DIR,1]
 
-    if type(DIR2) is str:
-        DIR2 = [DIR2,1]
-        
-    if not type(DIR) is list:
-        print 'DIR Config errr'
-     
-    if not type(DIR2) is list:
-        print 'DIR2 Config errr'
+    source_dir = DIRS[dir_num]['source']
+    target_dir = DIRS[dir_num]['target']
+    StrictDIR = DIRS[dir_num]['strict']
+    excludeDIR = DIRS[dir_num]['exclude']
+    includeDIR = DIRS[dir_num]['include']
 
     
     if os.sep == '\\':
-        DIR[0] = DIR[0].replace('/','\\')
-        DIR2[0] = DIR2[0].replace('/','\\')
-    
-    if len(DIRS[dir_num-1]) > 2:
-        StrictDIR =  DIRS[dir_num-1][2]
-        if  len(DIRS[dir_num-1]) == 4 :
-            Patterns = DIRS[dir_num-1][3]
-        else:
-            Patterns = []
-    else:
-        Patterns = []
-        StrictDIR = []
-    
-    if not os.path.isdir(DIR[0]) or not os.path.isdir(DIR2[0]):
+        source_dir = source_dir.replace('/','\\')
+        target_dir = target_dir.replace('/','\\')
+
+    if not os.path.isdir(source_dir) :
+        print "the dir %s is not exit" %(source_dir)
+        sys.exit()
+    elif not os.path.isdir(target_dir):
+        print "the dir %s is not exit" %(target_dir)
         sys.exit()
 
-    return  DIR,DIR2,Patterns,StrictDIR
+    return  source_dir,target_dir,StrictDIR,excludeDIR,includeDIR
 
 def init_global_lock(*dirs):
     for dir in dirs:
@@ -88,80 +69,82 @@ def init_global_lock(*dirs):
 
 if  __name__ == '__main__':
 
-    (DIR_config,DIR2_config,Patterns,StrictDIR) = select_dir()
-    
-    DIR = DIR_config[0]
-    DIR2 = DIR2_config[0]
-    
-    init_global_lock(DIR,DIR2)
+    (source_dir,target_dir,strictDIR,excludeDIR,includeDIR) = select_dir()
+
+    # init_global_lock(source_dir,target_dir)
     
     #开始遍历两个DIR，并把他们的文件列表维护到GlobalVariable.dir_tree中
-    statThread = []
-    for dir in StrictDIR:
-        init_global_lock( DIR+dir+os.sep,DIR2+dir+os.sep )
-        st1 = StatsThread(DIR+dir+os.sep,Patterns)
-        st1.start()
-        statThread.append ( st1 )
-        st2 = StatsThread(DIR2+dir+os.sep,Patterns)
-        st2.start()
-        statThread.append ( st2 )
-    
-    for dir in StrictDIR:
-        CompareThread(DIR+dir+os.sep,DIR2+dir+os.sep)
-        CompareThread(DIR2+dir+os.sep,DIR+dir+os.sep)        
-    
-    if GlobalVariable.task_queue.qsize() > 0 :
-        #print '####################################'
-        work = Worker(True);work.start();work.join();
-        #print '####################################'
-        choice = raw_input("the dirs are different,enter yes to Synchro Dirs:\n")
-        
-        
-        if choice == "yes":
-            GlobalVariable.init = True
-            while GlobalVariable.tmp_init_task_queue.qsize():
-                #如果队列为空，此方法会阻塞
-                item = GlobalVariable.tmp_init_task_queue.get()
-                GlobalVariable.task_queue.put( item )
-                GlobalVariable.tmp_init_task_queue.task_done()
-                
-        else:
-            sys.exit(0)
-    else:
-        GlobalVariable.init = True
-    
-    for st in statThread:
-        st.stop()
-    
-    for st in statThread:
-        st.join()
-    
-    GlobalVariable.locks = {}
-    GlobalVariable.dirs = []
-    init_global_lock(DIR,DIR2)
-    
-    work=Worker()
-    print Patterns
-    print DIR
-    print DIR2
+    # statThread = []
+    # for dir in strictDIR:
+    #     init_global_lock( source_dir+dir+os.sep,target_dir+dir+os.sep )
+    #     st1 = StatsThread(source_dir+dir+os.sep,patterns)
+    #     st1.start()
+    #     statThread.append ( st1 )
+    #     st2 = StatsThread(target_dir+dir+os.sep,patterns)
+    #     st2.start()
+    #     statThread.append ( st2 )
+    #
+    # for dir in strictDIR:
+    #     CompareThread(source_dir+dir+os.sep,target_dir+dir+os.sep)
+    #     CompareThread(target_dir+dir+os.sep,source_dir+dir+os.sep)
+    #
+    # if GlobalVariable.task_queue.qsize() > 0 :
+    #     #print '####################################'
+    #     work = Worker(True);work.start();work.join();
+    #     #print '####################################'
+    #     choice = raw_input("the dirs are different,enter yes to Synchro Dirs:\n")
+    #
+    #
+    #     if choice == "yes":
+    #         GlobalVariable.init = True
+    #         while GlobalVariable.tmp_init_task_queue.qsize():
+    #             #如果队列为空，此方法会阻塞
+    #             item = GlobalVariable.tmp_init_task_queue.get()
+    #             GlobalVariable.task_queue.put( item )
+    #             GlobalVariable.tmp_init_task_queue.task_done()
+    #
+    #     else:
+    #         sys.exit(0)
+    # else:
+    #     GlobalVariable.init = True
+    #
+    # for st in statThread:
+    #     st.stop()
+    #
+    # for st in statThread:
+    #     st.join()
+
 
     KillKeyboard()
 
+    main = Main(source_dir,target_dir,strictDIR,excludeDIR,includeDIR,sys.stderr)
+
+    main.start()
+
+    while True:
+        time.sleep(1)
 
 
-
-    watcher1 = Watcher(DIR,Patterns,DIR_config[1])
-    watcher2 = Watcher(DIR2,Patterns,DIR2_config[1])
-    
-    watcher1.start()
-    watcher2.start()
-    
-    GlobalVariable.init = True
-
-    work.start()
-
-    print "All init job is done,Synchronizing"
-    
-    watcher1.join()
-    watcher2.join()
-    work.join()
+    #
+    # GlobalVariable.locks = {}
+    # GlobalVariable.dirs = []
+    # init_global_lock(source_dir,target_dir)
+    #
+    # work=Worker()
+    #
+    # KillKeyboard()
+    #
+    #
+    # watcher1 = Watcher(source_dir,patterns)
+    # # watcher2 = Watcher(target_dir,Patterns,0)
+    #
+    # watcher1.start()
+    #
+    # GlobalVariable.init = True
+    #
+    # work.start()
+    #
+    # print "All init job is done,Synchronizing"
+    #
+    # watcher1.join()
+    # work.join()

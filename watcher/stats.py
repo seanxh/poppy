@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import threading
-from GlobalVariable import GlobalVariable
-from file import Files
-from util import *
+from utils.globalval import GlobalVariable
+from utils.file import Files
 import time
 
 

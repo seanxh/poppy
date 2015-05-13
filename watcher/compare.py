@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GlobalVariable import GlobalVariable
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from file import Files
-from Task import Task
-from util import *
-import time
+from utils.globalval import GlobalVariable
+from task.task import Task
+from utils.tools import *
 
 class CompareThread():
     def __init__(self,dir,target_dir):

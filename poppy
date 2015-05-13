@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export POPPY_HOME="$(cd "`dirname "$0"`"/; pwd)"
+
+(python "$POPPY_HOME"/poppy.py >/dev/null 2>&1 &)

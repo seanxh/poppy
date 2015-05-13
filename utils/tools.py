@@ -6,14 +6,14 @@ import hashlib
 def md5(file):
     if not os.path.isfile(file):
         return None
-    hash_new = hashlib.sha1() #»òhashlib.md5()  
-    with open(file,'rb') as fp: #´ò¿ªÎÄ¼þ£¬Ò»¶¨ÒªÒÔ¶þ½øÖÆ´ò¿ª  
+    hash_new = hashlib.sha1() #ï¿½ï¿½hashlib.md5()  
+    with open(file,'rb') as fp: #ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Òªï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Æ´ï¿½  
         while True:  
-            data = fp.read(1024) #¶ÁÈ¡ÎÄ¼þ¿é  
-            if not data: #Ö±µ½¶ÁÍêÎÄ¼þ  
+            data = fp.read(1024) #ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½  
+            if not data: #Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½  
                 break  
             hash_new.update(data)  
-        hash_value = hash_new.hexdigest() #Éú³É40Î»(sha1)»ò32Î»(md5)µÄÊ®Áù½øÖÆ×Ö·û´®  
+        hash_value = hash_new.hexdigest() #ï¿½ï¿½ï¿½40Î»(sha1)ï¿½ï¿½32Î»(md5)ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½  
         fp.close()
     return hash_value  
     

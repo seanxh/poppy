@@ -1,43 +1,35 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import threading
-from GlobalVariable import GlobalVariable
 import logging
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from watchdog.events import LoggingEventHandler
-from Task import Task
-from util import *
-from Handler import Handler
+from handler import Handler
 import time
 
 class Watcher(threading.Thread):
-    def __init__(self,dir,patterns,watch=True):
+    def __init__(self,dir,exclude,include):
         threading.Thread.__init__(self)
         self.dir = dir
-        self.daemon = True #如果设置此参数，则为后台线程
-        self.patterns = patterns
-        self.watch = watch
-        
+        self.setDaemon(True)
+        self.exclude = exclude
+        self.include = include
+
         self.flag = True #是否需要运行的标识位
          
     def run(self):
-        
-        if not self.watch:
-            return
-
         logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
         # event_handler = LoggingEventHandler()
-        event_handler = Handler(self.dir,self.patterns)
         observer = Observer()
+        event_handler = Handler(self.dir,self.exclude,self.include)
         observer.schedule(event_handler, path=self.dir, recursive=True)
         observer.start()
         try:
             while self.flag:
                 time.sleep(0.5)
+            observer.stop()
         except KeyboardInterrupt:
             observer.stop()
         observer.join()

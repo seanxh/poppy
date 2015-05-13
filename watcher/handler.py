@@ -1,19 +1,18 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
  
- 
-import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from GlobalVariable import GlobalVariable
-from Task import Task
-from util import *
+from task.task import Task
+from utils import *
+
 import time,re,os
  
 class Handler(FileSystemEventHandler):
-    def __init__(self,dir,patterns):
+    def __init__(self,dir,exclude,include):
         self.dir = dir
-        self.patterns = patterns
+        self.exclude = exclude
+        self.include = include
         #target_dir=target_dir
     
     def check_pattern(self,src_path):
@@ -21,17 +20,23 @@ class Handler(FileSystemEventHandler):
             return False
     
         file = os.path.basename(src_path)
-        
+
         pat = re.compile('^.*\.svn.*$')
         if pat.match( file ) != None:
             return False
-            
-        if (len(self.patterns) > 0) :
-            for pattern in self.patterns:
-                pat = re.compile('^'+str(pattern)+'$')
-                if pat.match( file ) != None:
-                    return True
-            return False
+
+        if (len(self.exclude) > 0) :
+            for pattern in self.exclude:
+                pat = re.compile(str(pattern))
+                if pat.search( src_path ) != None:##match exclude, Fail
+                    return False
+
+        if (len(self.include) > 0) :
+            for pattern in self.include:
+                pat = re.compile(str(pattern))
+                if pat.search( src_path ) == None:#not match include ,Fail
+                    return False
+
         return True
     
     def push_file_process_queue(self,src_path,type):
@@ -90,22 +95,7 @@ class Handler(FileSystemEventHandler):
                     GlobalVariable.moved_dict[event.dest_path] = 1
                     #如果对方文件不存在源文件，直接add，否则move
                     if not os.path.isfile(target_dir+event.src_path[len(self.dir):]):
-                        print target_dir+event.src_path[len(self.dir):]
+                        # print target_dir+event.src_path[len(self.dir):]
                         GlobalVariable.task_queue.put( Task(self.dir+event.dest_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"add") )
                     else:
                         GlobalVariable.task_queue.put( Task(target_dir+event.src_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"move") )
- 
- 
-if __name__ == "__main__":
-    event_handler = MyHandler()
-    observer = Observer()
-    observer.schedule(event_handler, path='Z:/monitor/', recursive=True)
-    observer.start()
- 
-    try:
-        print "started myWatch"
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
