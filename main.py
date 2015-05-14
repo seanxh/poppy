@@ -4,9 +4,6 @@ import os,sys,time,shutil,hashlib,datetime
 import threading
 from utils import *
 from watcher import *
-from task import *
-import logging
-import config
 
 def select_dir():
     #可以同步的文件夹列表
