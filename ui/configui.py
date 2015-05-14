@@ -97,7 +97,13 @@ class configUi(object):
         m1.pack(fill=X)
         input = []
         number = str(len(self.inputs)+1)
-        for k in range(0,6):
+
+        # m+=1
+        delete= Button(m1,text='Delete',command=partial(self.deleteone,number),activeforeground='white',activebackground='blue')
+        m1.add(delete)
+        self.deletes[number] = delete
+
+        for k in range(1,7):
             default_value = StringVar()
             if k == 0:
                 default_value.set(number)
