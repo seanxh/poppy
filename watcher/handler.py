@@ -14,6 +14,7 @@ class Handler(FileSystemEventHandler):
         self.exclude = exclude
         self.include = include
         #target_dir=target_dir
+        self.num = 0
     
     def check_pattern(self,src_path):
         if src_path.find('.svn') == 0:
@@ -39,7 +40,7 @@ class Handler(FileSystemEventHandler):
 
         return True
     
-    def push_file_process_queue(self,src_path,type):
+    def push_file_process_queue(self,number,src_path,type):
         if self.check_pattern(src_path):
             for target_dir in GlobalVariable.dirs:
                 if not self.dir == target_dir:
@@ -51,35 +52,43 @@ class Handler(FileSystemEventHandler):
                     if type == 'modify' and ( md5(self.dir+src_path) == md5(target_dir+src_path) ):
                         continue
                     
-                    GlobalVariable.task_queue.put( Task(self.dir+src_path,target_dir+src_path,type) )
+                    GlobalVariable.task_queue.put( Task(number,self.dir+src_path,target_dir+src_path,type) )
 
     
     def on_created(self,event):
+        self.num+=1
+        id = self.num
         if event.is_directory:
             pass
         else :
-            self.push_file_process_queue(event.src_path[len(self.dir):],"add")
+            self.push_file_process_queue(id,event.src_path[len(self.dir):],"add")
          
     def on_deleted(self,event):
+        self.num+=1
+        id = self.num
         if event.is_directory:
             pass
         else :
-            self.push_file_process_queue(event.src_path[len(self.dir):],"delete")
+            self.push_file_process_queue(id,event.src_path[len(self.dir):],"delete")
  
     def on_modified(self,event):
+         self.num+=1
+         id = self.num
          if event.is_directory:
             pass
          else :
             if GlobalVariable.moved_dict.has_key(event.src_path):
                 del GlobalVariable.moved_dict[event.src_path]
             else :
-                self.push_file_process_queue(event.src_path[len(self.dir):],"modify")
+                self.push_file_process_queue(id,event.src_path[len(self.dir):],"modify")
  
     def on_moved(self,event):
+        self.num+=1
+        id = self.num
         # pass
         # print "move",event.src_path,event.dest_path
         if event.dest_path.find(self.dir) != 0:
-            self.push_file_process_queue(event.src_path[len(self.dir):],"delete")
+            self.push_file_process_queue(id,event.src_path[len(self.dir):],"delete")
         else :
             
             if not self.check_pattern(event.src_path) and not self.check_pattern(event.dest_path):
@@ -96,6 +105,6 @@ class Handler(FileSystemEventHandler):
                     #如果对方文件不存在源文件，直接add，否则move
                     if not os.path.isfile(target_dir+event.src_path[len(self.dir):]):
                         # print target_dir+event.src_path[len(self.dir):]
-                        GlobalVariable.task_queue.put( Task(self.dir+event.dest_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"add") )
+                        GlobalVariable.task_queue.put( Task(id,self.dir+event.dest_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"add") )
                     else:
-                        GlobalVariable.task_queue.put( Task(target_dir+event.src_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"move") )
+                        GlobalVariable.task_queue.put( Task(id,target_dir+event.src_path[len(self.dir):],target_dir+event.dest_path[len(self.dir):],"move") )

@@ -9,9 +9,10 @@ from utils.globalval import GlobalVariable
 from utils.tools import *
 
 class Task(object):
-    def __init__(self,source_file,target_file,action):
+    def __init__(self,id,source_file,target_file,action):
         self.source_file = source_file
         self.target_file = target_file
+        self.id = id
         self.action = action
         
     def __str__(self):
@@ -24,7 +25,7 @@ class Task(object):
             source_file = ''.join((self.source_file[0:15],'...',self.source_file[len(self.source_file)-30:]))
         # return str(self.action)+":" + " "*(7-len(self.action)) + "from " + str(source_file) + "\n"+" "*8+"To   " + str(target_file)
 
-        return str(self.action) + " "*(7-len(self.action)) +":" + os.path.basename(source_file) +" "*2+"To  " + str(target_file)
+        return str(self.action) + " "*(7-len(self.action)) +":" + os.path.basename(source_file) +" "*2+"To  " + str(target_file) + ' TaskID:(' + str(self.id)+')'
         
     def do_it(self,console):
         actions = {
