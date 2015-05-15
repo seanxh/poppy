@@ -16,7 +16,8 @@ class Task(object):
         self.action = action
         
     def __str__(self):
-        target_file = self.target_file;source_file=self.source_file;
+        target_file = self.target_file.encode('utf-8')
+        source_file=self.source_file.encode('utf-8')
         
         if len(self.target_file) > 100:
             target_file = ''.join((self.target_file[0:15],'...',self.target_file[len(self.target_file)-30:]))

@@ -91,7 +91,7 @@ class Handler(FileSystemEventHandler):
             self.push_file_process_queue(id,event.src_path[len(self.dir):],"delete")
         else :
             
-            if not self.check_pattern(event.src_path) and not self.check_pattern(event.dest_path):
+            if not self.check_pattern(event.src_path) or not self.check_pattern(event.dest_path):
                 return
         
             for target_dir in GlobalVariable.dirs:
