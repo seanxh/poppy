@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 reload(sys)   
-sys.setdefaultencoding('gbk')
+sys.setdefaultencoding('utf-8')
 
 import os,time,shutil,hashlib,datetime
 from utils.globalval import GlobalVariable
@@ -16,8 +16,8 @@ class Task(object):
         self.action = action
         
     def __str__(self):
-        target_file = self.target_file.encode('utf-8')
-        source_file=self.source_file.encode('utf-8')
+        target_file = self.target_file
+        source_file=self.source_file
         
         if len(self.target_file) > 100:
             target_file = ''.join((self.target_file[0:15],'...',self.target_file[len(self.target_file)-30:]))
